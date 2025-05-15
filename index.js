@@ -33,6 +33,37 @@ async function run() {
         const result = await cursor.toArray();
         res.send(result)
       })
+            //find one
+      app.get('/users/:id' , async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id:new ObjectId(id)};
+        const result = await userCollection.findOne(query);
+        res.send(result);
+      })
+                //update one
+      app.put('/users/:id', async(req,res)=>{
+        const id = req.params.id;
+            //filter nilam
+        const filter = {_id:new ObjectId(id)};
+        const user= req.body;
+              //back end e value dekhlam
+        console.log("new user info is:",user)
+              // Specify the update to set a value for the plot field
+        const updateDoc = {
+          $set:{
+            name: user.name,
+            email: user.email
+          }
+        }
+           /* Set the upsert option to insert a document if no documents match
+                the filter */
+      const options = { upsert: true };
+            // Update the first document that matches the filter
+      const result = await userCollection.updateOne(filter, updateDoc,options);
+          // res.send korle server side and client er console e data theke update pabo
+      res.send(result);
+        
+      })
 
         // Connect the client to the server	(optional starting in v4.7)
         //create
